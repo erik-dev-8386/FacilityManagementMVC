@@ -1,0 +1,796 @@
+﻿@model CFB.Entities.ThanhDT.Models.FacilityThanhDt
+@{
+    ViewData["Title"] = "Create Facility";
+}
+
+<style>
+    :root {
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --primary-light: #818cf8;
+        --success: #10b981;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+        --dark: #1e293b;
+        --gray: #64748b;
+        --light-gray: #f1f5f9;
+        --purple: #a855f7;
+        --pink: #ec4899;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+        /* Animated Background Elements */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: moveBackground 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+    @@keyframes moveBackground {
+        0% {
+            transform: translate(0, 0);
+        }
+
+        100% {
+            transform: translate(50px, 50px);
+        }
+    }
+
+    .create-wrapper {
+        padding: 2rem 1rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Header */
+    .page-header {
+        background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.95) 100%);
+        backdrop-filter: blur(20px);
+        border-radius: 24px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.5);
+        position: relative;
+        overflow: hidden;
+        transform: translateY(0);
+        animation: slideDown 0.6s ease-out;
+    }
+
+    @@keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .page-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, var(--primary), var(--purple), var(--pink), var(--primary));
+        background-size: 200% 100%;
+        animation: gradientShift 3s ease infinite;
+    }
+
+    @@keyframes gradientShift {
+        0%, 100% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+    }
+
+    .header-content {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .header-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 100%);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2.5rem;
+        box-shadow: 0 15px 40px rgba(99, 102, 241, 0.5);
+        animation: pulse 2s ease-in-out infinite;
+        position: relative;
+    }
+
+        .header-icon::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            border-radius: 23px;
+            opacity: 0.5;
+            filter: blur(10px);
+            z-index: -1;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+    @@keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
+    }
+
+    @@keyframes glow {
+        0%, 100% {
+            opacity: 0.5;
+        }
+
+        50% {
+            opacity: 0.8;
+        }
+    }
+
+    .header-text h1 {
+        font-size: 2.25rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--primary), var(--purple));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0 0 0.5rem 0;
+        letter-spacing: -0.5px;
+    }
+
+    .header-text p {
+        color: var(--gray);
+        font-size: 1.1rem;
+        margin: 0;
+        font-weight: 500;
+    }
+
+    /* Form Card */
+    .form-card {
+        background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.95) 100%);
+        backdrop-filter: blur(20px);
+        border-radius: 24px;
+        padding: 3rem;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.5);
+        border: 1px solid rgba(255,255,255,0.4);
+        animation: slideUp 0.6s ease-out 0.2s both;
+    }
+
+    @@keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Form Groups */
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+
+    .form-group-full {
+        grid-column: 1 / -1;
+    }
+
+    .form-group {
+        margin-bottom: 0;
+    }
+
+    .form-label {
+        font-weight: 700;
+        color: var(--dark);
+        font-size: 0.95rem;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .form-label i {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .form-label .required {
+            color: var(--danger);
+            margin-left: 0.25rem;
+        }
+
+    /* Input Styles */
+    .form-control {
+        width: 100%;
+        padding: 1rem 1.25rem;
+        border: 2px solid rgba(99, 102, 241, 0.2);
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background: white;
+        font-weight: 500;
+        color: var(--dark);
+    }
+
+        .form-control:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .form-control:disabled {
+            background: var(--light-gray);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+    /* Select Styles */
+    select.form-control {
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236366f1' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        padding-right: 3rem;
+    }
+
+    /* Textarea */
+    textarea.form-control {
+        resize: vertical;
+        min-height: 120px;
+        font-family: inherit;
+        line-height: 1.6;
+    }
+
+    /* Validation */
+    .text-danger {
+        color: var(--danger);
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+        display: block;
+        font-weight: 600;
+        animation: shake 0.3s ease-in-out;
+    }
+
+    @@keyframes shake {
+        0%, 100% {
+            transform: translateX(0);
+        }
+
+        25% {
+            transform: translateX(-5px);
+        }
+
+        75% {
+            transform: translateX(5px);
+        }
+    }
+
+    .field-validation-error {
+        color: var(--danger);
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+        display: block;
+        font-weight: 600;
+    }
+
+    .input-validation-error {
+        border-color: var(--danger) !important;
+        animation: shake 0.3s ease-in-out;
+    }
+
+    .validation-summary-errors {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.08));
+        border: 2px solid rgba(239, 68, 68, 0.4);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        animation: slideDown 0.4s ease-out;
+    }
+
+        .validation-summary-errors ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .validation-summary-errors li {
+            color: var(--danger);
+            font-weight: 600;
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+            .validation-summary-errors li::before {
+                content: '⚠️';
+                font-size: 1.2rem;
+            }
+
+    /* Switch for IsAvailable */
+    .switch-container {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 0;
+    }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #cbd5e1;
+        transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 34px;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background: white;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+    input:checked + .slider {
+        background: linear-gradient(135deg, var(--success) 0%, #34d399 100%);
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+    }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+    .slider:active:before {
+        width: 32px;
+    }
+
+    .switch-label {
+        font-weight: 600;
+        color: var(--dark);
+        font-size: 1rem;
+        user-select: none;
+    }
+
+    /* Form Actions */
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2.5rem;
+        padding-top: 2rem;
+        border-top: 2px solid rgba(226, 232, 240, 0.5);
+    }
+
+    .btn {
+        padding: 1rem 2.5rem;
+        border-radius: 12px;
+        border: none;
+        font-weight: 700;
+        font-size: 1rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        text-decoration: none;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn i {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover i {
+            transform: scale(1.1);
+        }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 100%);
+        color: white;
+        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        flex: 1;
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(99, 102, 241, 0.6);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+    .btn-secondary {
+        background: white;
+        color: var(--gray);
+        border: 2px solid #e2e8f0;
+    }
+
+        .btn-secondary:hover {
+            background: var(--light-gray);
+            border-color: var(--gray);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .btn-secondary:active {
+            transform: translateY(-1px);
+        }
+
+    /* Helper Text */
+    .helper-text {
+        color: var(--gray);
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .helper-text i {
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+    /* Required Indicator */
+    .required-info {
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(168, 85, 247, 0.08));
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: var(--dark);
+        font-weight: 600;
+        border: 2px solid rgba(99, 102, 241, 0.2);
+    }
+
+        .required-info i {
+            color: var(--primary);
+            font-size: 1.25rem;
+        }
+
+    /* Input Success State */
+    .form-control.is-valid {
+        border-color: var(--success);
+    }
+
+        .form-control.is-valid:focus {
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+        }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+        }
+
+        .header-content {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .form-card {
+            padding: 2rem 1.5rem;
+        }
+
+        .page-header {
+            padding: 2rem 1.5rem;
+        }
+
+        .header-text h1 {
+            font-size: 1.75rem;
+        }
+
+        .header-icon {
+            width: 70px;
+            height: 70px;
+            font-size: 2rem;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .create-wrapper {
+            padding: 1rem 0.5rem;
+        }
+
+        .form-card {
+            padding: 1.5rem 1rem;
+            border-radius: 16px;
+        }
+
+        .page-header {
+            padding: 1.5rem 1rem;
+            border-radius: 16px;
+        }
+    }
+</style>
+
+<div class="create-wrapper">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="header-content">
+            <div class="header-icon">
+                <i class="bi bi-plus-circle-fill"></i>
+            </div>
+            <div class="header-text">
+                <h1>Create New Facility</h1>
+                <p>Add a new facility to the university management system</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Card -->
+    <div class="form-card">
+        <form asp-action="Create" id="createForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger validation-summary-errors"></div>
+
+            <div class="required-info">
+                <i class="bi bi-info-circle-fill"></i>
+                <span>Fields marked with <span style="color: var(--danger);">*</span> are required</span>
+            </div>
+
+            <div class="form-grid">
+                <!-- Facility Name -->
+                <div class="form-group form-group-full">
+                    <label asp-for="FacilityName" class="form-label">
+                        <i class="bi bi-building"></i>
+                        Facility Name
+                        <span class="required">*</span>
+                    </label>
+                    <input asp-for="FacilityName" class="form-control" placeholder="Enter facility name (e.g., Science Building A)" />
+                    <span asp-validation-for="FacilityName" class="text-danger"></span>
+                    <div class="helper-text">
+                        <i class="bi bi-lightbulb"></i>
+                        Provide a clear and descriptive name for the facility
+                    </div>
+                </div>
+
+                <!-- Facility Type -->
+                <div class="form-group">
+                    <label asp-for="FacilityTypeThanhDtid" class="form-label">
+                        <i class="bi bi-tag-fill"></i>
+                        Facility Type
+                        <span class="required">*</span>
+                    </label>
+                    <select asp-for="FacilityTypeThanhDtid" class="form-control" asp-items="ViewBag.FacilityTypeThanhDtid">
+                        <option value="">-- Select Type --</option>
+                    </select>
+                    <span asp-validation-for="FacilityTypeThanhDtid" class="text-danger"></span>
+                </div>
+
+                <!-- Campus -->
+                <div class="form-group">
+                    <label asp-for="CampusThanhDtid" class="form-label">
+                        <i class="bi bi-geo-alt-fill"></i>
+                        Campus
+                        <span class="required">*</span>
+                    </label>
+                    <select asp-for="CampusThanhDtid" class="form-control" asp-items="ViewBag.CampusThanhDtid">
+                        <option value="">-- Select Campus --</option>
+                    </select>
+                    <span asp-validation-for="CampusThanhDtid" class="text-danger"></span>
+                </div>
+
+                <!-- Capacity -->
+                <div class="form-group">
+                    <label asp-for="Capacity" class="form-label">
+                        <i class="bi bi-people-fill"></i>
+                        Capacity
+                        <span class="required">*</span>
+                    </label>
+                    <input asp-for="Capacity" type="number" min="1" class="form-control" placeholder="e.g., 50" />
+                    <span asp-validation-for="Capacity" class="text-danger"></span>
+                    <div class="helper-text">
+                        <i class="bi bi-lightbulb"></i>
+                        Maximum number of people the facility can accommodate
+                    </div>
+                </div>
+
+                <!-- Location Detail -->
+                <div class="form-group">
+                    <label asp-for="LocationDetail" class="form-label">
+                        <i class="bi bi-pin-map-fill"></i>
+                        Location Detail
+                        <span class="required">*</span>
+                    </label>
+                    <input asp-for="LocationDetail" class="form-control" placeholder="e.g., Building A, Floor 3, Room 301" />
+                    <span asp-validation-for="LocationDetail" class="text-danger"></span>
+                    <div class="helper-text">
+                        <i class="bi bi-lightbulb"></i>
+                        Specific location within the campus
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="form-group form-group-full">
+                    <label asp-for="Description" class="form-label">
+                        <i class="bi bi-card-text"></i>
+                        Description
+                    </label>
+                    <textarea asp-for="Description" class="form-control" rows="4"
+                              placeholder="Enter detailed description of the facility, its features, and equipment..."></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                    <div class="helper-text">
+                        <i class="bi bi-lightbulb"></i>
+                        Optional: Provide additional details about the facility
+                    </div>
+                </div>
+
+                <!-- Availability Status - FIXED VERSION -->
+                <div class="form-group form-group-full">
+                    <label class="form-label">
+                        <i class="bi bi-toggle-on"></i>
+                        Availability Status
+                    </label>
+                    <div class="switch-container">
+                        <label class="switch">
+                            <input type="checkbox" id="isAvailableToggle" name="IsAvailable" value="true" @(Model?.IsAvailable ?? true ? "checked" : "") />
+                            <input type="hidden" name="IsAvailable" value="false" />
+                            <span class="slider"></span>
+                        </label>
+                        <span class="switch-label">Facility is available for use</span>
+                    </div>
+                    <div class="helper-text">
+                        <i class="bi bi-lightbulb"></i>
+                        Toggle to set whether this facility is currently available
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span>Create Facility</span>
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i>
+                    <span>Cancel</span>
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // Add smooth validation feedback
+        document.getElementById('createForm')?.addEventListener('submit', function(e) {
+            const invalidInputs = this.querySelectorAll('.input-validation-error');
+            if (invalidInputs.length > 0) {
+                e.preventDefault();
+                invalidInputs[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                setTimeout(() => invalidInputs[0].focus(), 300);
+            }
+        });
+
+        // Real-time validation styling
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.classList.contains('input-validation-error')) {
+                    this.style.borderColor = 'var(--danger)';
+                } else if (this.value && !this.classList.contains('input-validation-error')) {
+                    this.classList.add('is-valid');
+                }
+            });
+
+            input.addEventListener('focus', function() {
+                this.classList.remove('is-valid');
+            });
+        });
+
+        // Smooth scroll on page load
+        window.addEventListener('load', function() {
+            const firstInput = document.querySelector('.form-control');
+            if (firstInput) {
+                setTimeout(() => firstInput.focus(), 500);
+            }
+        });
+    </script>
+}

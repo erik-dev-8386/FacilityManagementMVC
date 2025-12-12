@@ -1,0 +1,612 @@
+﻿@model CFB.Entities.ThanhDT.Models.FacilityThanhDt
+@{
+    ViewData["Title"] = "Facility Details";
+}
+
+<style>
+    :root {
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --success: #10b981;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+        --info: #3b82f6;
+        --dark: #1e293b;
+        --gray: #64748b;
+    }
+
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    }
+
+    .details-wrapper {
+        padding: 2rem 1rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    /* Header Section */
+    .details-header {
+        background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 100%);
+        backdrop-filter: blur(10px);
+        border-radius: 24px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .details-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), #a855f7, #ec4899);
+        }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+
+    .facility-title {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .facility-icon-large {
+        width: 90px;
+        height: 90px;
+        background: linear-gradient(135deg, var(--primary) 0%, #a855f7 100%);
+        border-radius: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 3rem;
+        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .facility-icon-large::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+    @@keyframes shine {
+        0% {
+            transform: translateX(-100%) translateY(-100%) rotate(45deg);
+        }
+
+        100% {
+            transform: translateX(100%) translateY(100%) rotate(45deg);
+        }
+    }
+
+    .title-info h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--primary), #a855f7);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 0 0 0.5rem 0;
+    }
+
+    .facility-type-badge {
+        display: inline-block;
+        padding: 0.5rem 1.5rem;
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.1));
+        color: var(--primary);
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 700;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .btn-action {
+        padding: 1rem 2rem;
+        border-radius: 16px;
+        border: none;
+        font-weight: 700;
+        font-size: 1rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .btn-action::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .btn-action:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+    .btn-edit {
+        background: linear-gradient(135deg, var(--warning) 0%, #fbbf24 100%);
+        color: white;
+        box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3);
+    }
+
+        .btn-edit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4);
+            color: white;
+        }
+
+    .btn-back {
+        background: white;
+        color: var(--primary);
+        border: 2px solid var(--primary);
+    }
+
+        .btn-back:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);
+        }
+
+    /* Main Content Grid */
+    .content-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Info Card */
+    .info-card {
+        background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 100%);
+        backdrop-filter: blur(10px);
+        border-radius: 24px;
+        padding: 2.5rem;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--dark);
+        margin: 0 0 2rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+        .card-title i {
+            color: var(--primary);
+            font-size: 1.75rem;
+        }
+
+    .info-row {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 1.5rem;
+        padding: 1.5rem 0;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+    }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+    .info-label {
+        font-weight: 700;
+        color: var(--gray);
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .info-label i {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+    .info-value {
+        font-size: 1.1rem;
+        color: var(--dark);
+        font-weight: 600;
+    }
+
+    /* Status Badge in Details */
+    .status-badge-large {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1rem;
+    }
+
+        .status-badge-large.available {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1));
+            color: var(--success);
+        }
+
+        .status-badge-large.unavailable {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.1));
+            color: var(--danger);
+        }
+
+    /* Stats Sidebar */
+    .stats-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .stat-box {
+        background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 100%);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        border: 1px solid rgba(255,255,255,0.3);
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+        .stat-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+    .stat-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 1.5rem;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+    }
+
+    .stat-box.capacity .stat-icon {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.05));
+        color: var(--warning);
+    }
+
+    .stat-box.location .stat-icon {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.05));
+        color: var(--info);
+    }
+
+    .stat-box.status .stat-icon {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05));
+        color: var(--success);
+    }
+
+    .stat-value {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--dark), var(--gray));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 0 0 0.5rem 0;
+    }
+
+    .stat-label {
+        color: var(--gray);
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    /* Description Card */
+    .description-card {
+        background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 100%);
+        backdrop-filter: blur(10px);
+        border-radius: 24px;
+        padding: 2.5rem;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .description-text {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: var(--dark);
+        margin: 0;
+    }
+
+    /* Timeline */
+    .timeline-card {
+        background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 100%);
+        backdrop-filter: blur(10px);
+        border-radius: 24px;
+        padding: 2.5rem;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .timeline-item {
+        display: flex;
+        gap: 1.5rem;
+        align-items: flex-start;
+        padding: 1.5rem 0;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+    }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+
+    .timeline-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, var(--primary) 0%, #a855f7 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    .timeline-content h4 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--dark);
+        margin: 0 0 0.5rem 0;
+    }
+
+    .timeline-date {
+        color: var(--gray);
+        font-size: 0.95rem;
+        font-weight: 600;
+    }
+
+    /* Responsive */
+    @@media (max-width: 1024px) {
+        .content-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .header-content {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .facility-title {
+            flex-direction: column;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .btn-action {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .info-row {
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+    }
+</style>
+
+<div class="details-wrapper">
+    <!-- Header -->
+    <div class="details-header">
+        <div class="header-content">
+            <div class="facility-title">
+                <div class="facility-icon-large">
+                    <i class="bi bi-building"></i>
+                </div>
+                <div class="title-info">
+                    <h1>@Model.FacilityName</h1>
+                    <span class="facility-type-badge">
+                        <i class="bi bi-tag-fill"></i> @Model.FacilityTypeThanhDt?.TypeName
+                    </span>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <a asp-action="Edit" asp-route-id="@Model.FacilityThanhDtid" class="btn-action btn-edit">
+                    <i class="bi bi-pencil-fill"></i>
+                    <span>Edit Facility</span>
+                </a>
+                <a asp-action="Index" class="btn-action btn-back">
+                    <i class="bi bi-arrow-left"></i>
+                    <span>Back to List</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="content-grid">
+        <!-- Left Column -->
+        <div>
+            <!-- Basic Information -->
+            <div class="info-card" style="margin-bottom: 2rem;">
+                <h2 class="card-title">
+                    <i class="bi bi-info-circle-fill"></i>
+                    Basic Information
+                </h2>
+
+                <div class="info-row">
+                    <div class="info-label">
+                        <i class="bi bi-building"></i>
+                        Facility Name
+                    </div>
+                    <div class="info-value">@Model.FacilityName</div>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-label">
+                        <i class="bi bi-tag"></i>
+                        Facility Type
+                    </div>
+                    <div class="info-value">@Model.FacilityTypeThanhDt?.TypeName</div>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-label">
+                        <i class="bi bi-geo-alt-fill"></i>
+                        Campus
+                    </div>
+                    <div class="info-value">@Model.CampusThanhDt?.Name</div>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-label">
+                        <i class="bi bi-pin-map-fill"></i>
+                        Location Detail
+                    </div>
+                    <div class="info-value">@Model.LocationDetail</div>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-label">
+                        <i class="bi bi-people-fill"></i>
+                        Capacity
+                    </div>
+                    <div class="info-value">@Model.Capacity people</div>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-label">
+                        <i class="bi bi-toggle-on"></i>
+                        Status
+                    </div>
+                    <div class="info-value">
+                        @if (Model.IsAvailable == true)
+                        {
+                            <span class="status-badge-large available">
+                                <i class="bi bi-check-circle-fill"></i>
+                                Available
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="status-badge-large unavailable">
+                                <i class="bi bi-x-circle-fill"></i>
+                                Unavailable
+                            </span>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            @if (!string.IsNullOrEmpty(Model.Description))
+            {
+                <div class="description-card" style="margin-bottom: 2rem;">
+                    <h2 class="card-title">
+                        <i class="bi bi-card-text"></i>
+                        Description
+                    </h2>
+                    <p class="description-text">@Model.Description</p>
+                </div>
+            }
+
+            <!-- Timeline -->
+            <div class="timeline-card">
+                <h2 class="card-title">
+                    <i class="bi bi-clock-history"></i>
+                    Timeline
+                </h2>
+
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <i class="bi bi-calendar-plus"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <h4>Created</h4>
+                        <div class="timeline-date">
+                            @Model.CreatedAt?.ToString("MMMM dd, yyyy 'at' hh:mm tt")
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <h4>Last Updated</h4>
+                        <div class="timeline-date">
+                            @Model.UpdatedAt?.ToString("MMMM dd, yyyy 'at' hh:mm tt")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column - Stats -->
+        <div class="stats-sidebar">
+            <div class="stat-box capacity">
+                <div class="stat-icon">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <div class="stat-value">@Model.Capacity</div>
+                <div class="stat-label">Total Capacity</div>
+            </div>
+
+            <div class="stat-box location">
+                <div class="stat-icon">
+                    <i class="bi bi-geo-alt-fill"></i>
+                </div>
+                <div class="stat-value" style="font-size: 1.5rem;">@Model.CampusThanhDt?.Name</div>
+                <div class="stat-label">Campus Location</div>
+            </div>
+
+            <div class="stat-box status">
+                <div class="stat-icon">
+                    <i class="bi bi-@(Model.IsAvailable == true ? "check-circle-fill" : "x-circle-fill")"></i>
+                </div>
+                <div class="stat-value" style="font-size: 1.75rem;">
+                    @(Model.IsAvailable == true ? "Available" : "Unavailable")
+                </div>
+                <div class="stat-label">Current Status</div>
+            </div>
+        </div>
+    </div>
+</div>

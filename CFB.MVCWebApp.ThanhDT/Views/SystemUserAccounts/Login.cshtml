@@ -1,0 +1,46 @@
+﻿@* Login.cshtml *@
+@model CFB.Entities.ThanhDT.Models.SystemUserAccount
+
+<div class="container mt-5" style="max-width:400px;">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h3 class="text-center text-primary mb-4">Đăng nhập</h3>
+            <form asp-action="Login" method="post">
+
+                @* ✅ BẮT ĐẦU: Logic hiển thị lỗi/thông báo từ DeniedAndRedirect *@
+                @{
+                    // Lấy lỗi đăng nhập (từ Post Login)
+                    var errorMessage = ViewData["ErrorMessage"] as string;
+                    // Lấy lỗi từ chối quyền (từ DeniedAndRedirect qua TempData)
+                    var deniedMessage = TempData["DeniedMessage"] as string;
+                }
+
+                @if (!string.IsNullOrEmpty(errorMessage) || !string.IsNullOrEmpty(deniedMessage))
+                {
+                    <div class="alert alert-danger">
+                        @if (!string.IsNullOrEmpty(deniedMessage))
+                        {
+                            @deniedMessage
+                        }
+                        else
+                        {
+                            @errorMessage
+                        }
+                    </div>
+                }
+                @* KẾT THÚC: Logic hiển thị lỗi/thông báo *@
+
+                <div class="mb-3">
+                    <label class="form-label">Tên đăng nhập</label>
+                    <input asp-for="UserName" class="form-control" placeholder="Nhập tên đăng nhập" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Mật khẩu</label>
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Nhập mật khẩu" />
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
+            </form>
+        </div>
+    </div>
+</div>
